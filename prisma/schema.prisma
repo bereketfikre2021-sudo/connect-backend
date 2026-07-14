@@ -1,0 +1,266 @@
+// Connect Digitals — Prisma Schema
+// Database: Neon PostgreSQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────
+// ADMINS
+// ─────────────────────────────────────────────
+model Admin {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  name         String
+  role         String   @default("admin")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("admins")
+}
+
+// ─────────────────────────────────────────────
+// HERO SLIDES
+// ─────────────────────────────────────────────
+model HeroSlide {
+  id              String   @id @default(uuid())
+  backgroundImage String   @map("background_image")
+  imagePublicId   String?  @map("image_public_id")
+  headline        String?
+  subheadline     String?
+  buttonText      String?  @map("button_text")
+  buttonUrl       String?  @map("button_url")
+  altText         String?  @map("alt_text")
+  autoSlideDelay  Int      @default(4000) @map("auto_slide_delay")
+  displayOrder    Int      @default(0) @map("display_order")
+  status          String   @default("active") // active | inactive
+  published       Boolean  @default(true)     // computed from status for API compatibility
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@map("hero_slides")
+}
+
+// ─────────────────────────────────────────────
+// PORTFOLIO PROJECTS
+// ─────────────────────────────────────────────
+model PortfolioProject {
+  id               String   @id @default(uuid())
+  thumbnail        String
+  thumbnailPublicId String? @map("thumbnail_public_id")
+  gallery          String[] @default([])
+  galleryPublicIds String[] @default([]) @map("gallery_public_ids")
+  title            String
+  slug             String   @unique
+  category         String   // brand-design | social-media-design | packaging-environmental-design | print-layout | web-ui-design
+  client           String?
+  industry         String?
+  year             Int?
+  shortDescription String?  @map("short_description")
+  fullDescription  String?  @map("full_description")
+  servicesProvided String[] @default([]) @map("services_provided")
+  technologies     String[] @default([])
+  projectUrl       String?  @map("project_url")
+  altText          String?  @map("alt_text")
+  // Case study fields (embedded in portfolio)
+  caseStudyChallenge String? @map("case_study_challenge")
+  caseStudySolution  String? @map("case_study_solution")
+  caseStudyResults   Json?   @map("case_study_results") // [{metric, value}]
+  featured         Boolean  @default(false)
+  status           String   @default("published") // published | draft | archived
+  published        Boolean  @default(true)        // computed from status for API compatibility
+  displayOrder     Int      @default(0) @map("display_order")
+  seoTitle         String?  @map("seo_title")
+  seoDescription   String?  @map("seo_description")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  @@map("portfolio_projects")
+}
+
+// ─────────────────────────────────────────────
+// CASE STUDIES
+// ─────────────────────────────────────────────
+model CaseStudy {
+  id             String   @id @default(uuid())
+  heroImage      String   @map("hero_image")
+  heroPublicId   String?  @map("hero_public_id")
+  gallery        String[] @default([])
+  galleryPublicIds String[] @default([]) @map("gallery_public_ids")
+  title          String
+  slug           String   @unique
+  client         String
+  industry       String?
+  overview       String?
+  challenge      String[] @default([])
+  research       String?
+  strategy       String?
+  designProcess  String?  @map("design_process")
+  solution       String?
+  role           String[] @default([])
+  results        String?  // outcome / conclusion
+  conclusion     String?
+  published      Boolean  @default(true)
+  displayOrder   Int      @default(0) @map("display_order")
+  seoTitle       String?  @map("seo_title")
+  seoDescription String?  @map("seo_description")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  @@map("case_studies")
+}
+
+// ─────────────────────────────────────────────
+// BLOG POSTS
+// ─────────────────────────────────────────────
+model BlogPost {
+  id            String    @id @default(uuid())
+  featuredImage String?   @map("featured_image")
+  imagePublicId String?   @map("image_public_id")
+  title         String
+  slug          String    @unique
+  excerpt       String?
+  content       String    // Rich text / markdown
+  category      String?
+  tags          String[]  @default([])
+  author        String    @default("Connect Digitals")
+  readingTime   Int?      @map("reading_time") // minutes
+  status        String    @default("draft") // draft | published | scheduled
+  published     Boolean   @default(false)
+  publishedAt   DateTime? @map("published_at")
+  scheduledAt   DateTime? @map("scheduled_at") // for scheduled status
+  displayOrder  Int       @default(0) @map("display_order")
+  seoTitle      String?   @map("seo_title")
+  seoDescription String?  @map("seo_description")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  @@map("blog_posts")
+}
+
+// ─────────────────────────────────────────────
+// TRUSTED BRANDS
+// ─────────────────────────────────────────────
+model TrustedBrand {
+  id          String   @id @default(uuid())
+  logo        String
+  logoPublicId String? @map("logo_public_id")
+  name        String
+  website     String?
+  altText     String?  @map("alt_text")
+  displayOrder Int     @default(0) @map("display_order")
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("trusted_brands")
+}
+
+// ─────────────────────────────────────────────
+// TESTIMONIALS
+// ─────────────────────────────────────────────
+model Testimonial {
+  id           String   @id @default(uuid())
+  clientPhoto  String?  @map("client_photo")
+  photoPublicId String? @map("photo_public_id")
+  clientName   String   @map("client_name")
+  position     String?
+  company      String?
+  review       String
+  rating       Int      @default(5)
+  href         String?  // external link
+  featured     Boolean  @default(false)
+  displayOrder Int      @default(0) @map("display_order")
+  published    Boolean  @default(true)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("testimonials")
+}
+
+// ─────────────────────────────────────────────
+// PAGE VIEWS (lightweight analytics)
+// ─────────────────────────────────────────────
+model PageView {
+  id        String   @id @default(uuid())
+  page      String   // home | portfolio | blog | case-studies | contact
+  slug      String?  // for individual project/post/case-study views
+  referrer  String?
+  country   String?
+  viewedAt  DateTime @default(now()) @map("viewed_at")
+
+  @@index([page])
+  @@index([viewedAt])
+  @@map("page_views")
+}
+
+// ─────────────────────────────────────────────
+// ACTIVITY LOG
+// ─────────────────────────────────────────────
+model ActivityLog {
+  id         String   @id @default(uuid())
+  action     String   // created | updated | published | deleted
+  entity     String   // portfolio | blog | hero | case-study | testimonial | trusted-brand | settings | lead
+  entityId   String   @map("entity_id")
+  title      String   // human-readable label e.g. "Swan Clothing"
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@map("activity_logs")
+}
+
+// ─────────────────────────────────────────────
+// CONTACT LEADS
+// ─────────────────────────────────────────────
+model ContactLead {
+  id          String   @id @default(uuid())
+  name        String
+  email       String
+  phone       String?
+  company     String?
+  service     String?  // service interested in
+  budget      String?  // optional budget range
+  message     String
+  status      String   @default("new") // new | contacted | won | closed
+  notes       String?  // internal admin notes
+  submittedAt DateTime @default(now()) @map("submitted_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("contact_leads")
+}
+
+// ─────────────────────────────────────────────
+// SETTINGS
+// ─────────────────────────────────────────────
+model Setting {
+  id              String   @id @default(uuid())
+  websiteName     String   @default("Connect Digitals") @map("website_name")
+  logo            String?
+  logoPublicId    String?  @map("logo_public_id")
+  favicon         String?
+  faviconPublicId String?  @map("favicon_public_id")
+  seoTitle        String?  @map("seo_title")
+  seoDescription  String?  @map("seo_description")
+  seoKeywords     String?  @map("seo_keywords")
+  socialFacebook  String?  @map("social_facebook")
+  socialInstagram String?  @map("social_instagram")
+  socialTwitter   String?  @map("social_twitter")
+  socialLinkedin  String?  @map("social_linkedin")
+  socialWhatsapp  String?  @map("social_whatsapp")
+  contactEmail    String?  @map("contact_email")
+  contactPhone    String?  @map("contact_phone")
+  tagline         String?  // e.g. "Connect. Create. Captivate."
+  slogan          String?  // e.g. "We connect your vision..."
+  statProjects    Int      @default(150) @map("stat_projects")
+  statSatisfaction Int     @default(98)  @map("stat_satisfaction")
+  statExperience  Int      @default(5)   @map("stat_experience")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@map("settings")
+}
