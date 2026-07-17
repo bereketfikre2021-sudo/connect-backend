@@ -1,12 +1,13 @@
 import { config } from './config/env';
 import app from './app';
-import prisma from './database/prisma';
+import prisma, { connectWithRetry } from './database/prisma';
 import logger from './utils/logger';
 
 async function bootstrap() {
   try {
-    // Test database connection
-    await prisma.$connect();
+    // Wake Neon (may be sleeping on cold start — retries with backoff)
+    logger.info('⏳ Connecting to database…');
+    await connectWithRetry(5);
     logger.info('✅ Database connected');
 
     const server = app.listen(config.port, () => {
