@@ -14,6 +14,7 @@ router.get('/slug/:slug', portfolioController.getBySlug);
 // Admin
 router.get('/:id', authenticate, portfolioController.getById);
 router.post('/', authenticate, uploadSingle, createPortfolioValidators, validate, portfolioController.create);
+router.put('/reorder', authenticate, portfolioController.reorder);
 router.put('/:id', authenticate, uploadSingle, updatePortfolioValidators, validate, portfolioController.update);
 router.delete('/:id', authenticate, portfolioController.remove);
 

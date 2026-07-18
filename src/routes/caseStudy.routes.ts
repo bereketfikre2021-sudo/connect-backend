@@ -14,6 +14,7 @@ router.get('/slug/:slug', caseStudyController.getBySlug);
 // Admin
 router.get('/:id', authenticate, caseStudyController.getById);
 router.post('/', authenticate, uploadSingle, createCaseStudyValidators, validate, caseStudyController.create);
+router.put('/reorder', authenticate, caseStudyController.reorder);
 router.put('/:id', authenticate, uploadSingle, updateCaseStudyValidators, validate, caseStudyController.update);
 router.delete('/:id', authenticate, caseStudyController.remove);
 

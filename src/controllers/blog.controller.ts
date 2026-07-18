@@ -59,3 +59,10 @@ export async function remove(req: Request, res: Response, next: NextFunction): P
     sendSuccess(res, null, 'Blog post deleted');
   } catch (err) { next(err); }
 }
+
+export async function reorder(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const posts = await blogService.reorderBlogPosts(req.body.items);
+    sendSuccess(res, posts, 'Order updated');
+  } catch (err) { next(err); }
+}

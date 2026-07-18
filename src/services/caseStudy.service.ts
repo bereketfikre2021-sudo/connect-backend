@@ -125,3 +125,10 @@ export async function deleteCaseStudy(id: string) {
 
   return prisma.caseStudy.delete({ where: { id } });
 }
+
+export async function reorderCaseStudies(items: { id: string; displayOrder: number }[]) {
+  const updates = items.map((item) =>
+    prisma.caseStudy.update({ where: { id: item.id }, data: { displayOrder: item.displayOrder } })
+  );
+  return prisma.$transaction(updates);
+}

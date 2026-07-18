@@ -64,3 +64,10 @@ export async function remove(req: Request, res: Response, next: NextFunction): P
     sendSuccess(res, null, 'Case study deleted');
   } catch (err) { next(err); }
 }
+
+export async function reorder(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const items = await caseStudyService.reorderCaseStudies(req.body.items);
+    sendSuccess(res, items, 'Order updated');
+  } catch (err) { next(err); }
+}

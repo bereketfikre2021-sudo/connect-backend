@@ -169,3 +169,10 @@ export async function deletePortfolioProject(id: string) {
 
   return prisma.portfolioProject.delete({ where: { id } });
 }
+
+export async function reorderPortfolioProjects(items: { id: string; displayOrder: number }[]) {
+  const updates = items.map((item) =>
+    prisma.portfolioProject.update({ where: { id: item.id }, data: { displayOrder: item.displayOrder } })
+  );
+  return prisma.$transaction(updates);
+}

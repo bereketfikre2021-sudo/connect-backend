@@ -75,3 +75,10 @@ export async function remove(req: Request, res: Response, next: NextFunction): P
     sendSuccess(res, null, 'Project deleted');
   } catch (err) { next(err); }
 }
+
+export async function reorder(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const projects = await portfolioService.reorderPortfolioProjects(req.body.items);
+    sendSuccess(res, projects, 'Order updated');
+  } catch (err) { next(err); }
+}

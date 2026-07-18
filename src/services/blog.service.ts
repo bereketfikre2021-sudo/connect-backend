@@ -150,3 +150,10 @@ export async function deleteBlogPost(id: string) {
 
   return prisma.blogPost.delete({ where: { id } });
 }
+
+export async function reorderBlogPosts(items: { id: string; displayOrder: number }[]) {
+  const updates = items.map((item) =>
+    prisma.blogPost.update({ where: { id: item.id }, data: { displayOrder: item.displayOrder } })
+  );
+  return prisma.$transaction(updates);
+}
