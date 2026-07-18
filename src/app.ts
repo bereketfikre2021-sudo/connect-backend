@@ -22,6 +22,7 @@ import settingsRoutes from './routes/settings.routes';
 import dashboardRoutes from './routes/dashboard.routes';
 import contactRoutes from './routes/contact.routes';
 import analyticsRoutes from './routes/analytics.routes';
+import seoRoutes from './routes/seo.routes';
 
 const app = express();
 
@@ -95,6 +96,9 @@ app.get('/health/db', async (_req, res) => {
     res.status(503).json({ status: 'error', db: 'unavailable', message: err?.message });
   }
 });
+
+// ── SEO — sitemap.xml & robots.txt (root level, no /api prefix) ──
+app.use('/', seoRoutes);
 
 // ── API Routes ────────────────────────────────────────────────────
 const API = '/api/v1';

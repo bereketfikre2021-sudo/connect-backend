@@ -42,4 +42,6 @@ export const config = {
     max: parseInt(process.env.RATE_LIMIT_MAX || '100', 10),
     authMax: parseInt(process.env.AUTH_RATE_LIMIT_MAX || '10', 10),
   },
+
+  siteUrl: process.env.SITE_URL || 'https://web.bereketfikre.et',
 };
