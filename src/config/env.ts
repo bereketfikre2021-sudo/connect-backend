@@ -44,4 +44,10 @@ export const config = {
   },
 
   siteUrl: process.env.SITE_URL || 'https://web.bereketfikre.et',
+
+  ga4: {
+    propertyId: process.env.GA4_PROPERTY_ID || '',
+    clientEmail: process.env.GA4_CLIENT_EMAIL || '',
+    privateKey: (process.env.GA4_PRIVATE_KEY || '').replace(/\\n/g, '\n'),
+  },
 };

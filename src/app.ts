@@ -11,6 +11,7 @@ import logger from './utils/logger';
 import { errorHandler, notFoundHandler } from './middlewares/error.middleware';
 import prisma from './database/prisma';
 
+import { visitorMiddleware } from './middlewares/visitor.middleware';
 import authRoutes from './routes/auth.routes';
 import heroRoutes from './routes/hero.routes';
 import portfolioRoutes from './routes/portfolio.routes';
@@ -99,6 +100,9 @@ app.get('/health/db', async (_req, res) => {
 
 // ── SEO — sitemap.xml & robots.txt (root level, no /api prefix) ──
 app.use('/', seoRoutes);
+
+// ── Visitor tracking middleware ───────────────────────────────────
+app.use(visitorMiddleware);
 
 // ── API Routes ────────────────────────────────────────────────────
 const API = '/api/v1';
